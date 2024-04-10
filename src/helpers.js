@@ -1,6 +1,8 @@
 const { readdirSync, statSync } = require("fs");
 const { join } = require("path");
 
+const GlobalVariables = require('./variables.json');
+
 function readdir(dir) {
   let files = [];
   for (const file of readdirSync(dir)) {
@@ -36,8 +38,24 @@ class CustomHelpers {
       cmd.type = 'messageCreate'
       this.client.commands.add(cmd);
       console.log(`> Loaded "${cmd.name}" [${command}]`)
-      drawConsoleLine();
+      //drawConsoleLine();
     }
+  }
+
+  loadGlobalVariables() {
+    let variableLength = Object.keys(GlobalVariables).length;
+    console.log('Loading Variables... [' + variableLength + ']')
+    drawConsoleLine()
+    let code = '';
+    //console.log(GlobalVariables)
+    for (let [key, value] of Object.entries(GlobalVariables)) {
+      code += `$setVar[${key};g;${value}]`
+      
+    }
+    this.client.commands.add({
+      type: 'ready',
+      code
+    });
   }
 }
 
