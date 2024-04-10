@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tryforge/forgescript": "^1.4.0",
     "express": "^4.19.2"
   }
 }
