@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const { ForgeClient } = require("@tryforge/forgescript")
+const { ForgeClient } = require("@tryforge/forgescript");
+const { join } = require("path");
+const CustomHelpers = require('./helpers');
 
 const client = new ForgeClient({
     intents: [
@@ -15,7 +17,10 @@ const client = new ForgeClient({
     prefixes: [
         "qi"
     ]
-})
+});
+const helpers = new CustomHelpers(client);
+
+helpers.loadCommands();
 
 
 
@@ -25,6 +30,8 @@ client.commands.add({
   $log[Ready on $userTag[$clientID]]
   `
 })
+
+
 
 
 
