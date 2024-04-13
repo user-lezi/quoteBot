@@ -1,3 +1,9 @@
 {
-  "color": "#74eccf"
+  "colors": {
+    "main": "#74eccf"
+  },
+  "channels": {
+    "public_log": "1226781174052032543",
+    "private_log": "1226781227256774656"
+  }
 }

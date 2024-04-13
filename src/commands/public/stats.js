@@ -2,7 +2,7 @@ module.exports = {
   name: 'stats',
   code: `
   $title[Bot Statistics]
-  $color[$getVar[color;g]]
+  $color[$getVar[main;colors]]
 
   $let[guilds;$guildCount]
   $arrayLoad[guildIds;,;$guildIDs[,]]
@@ -10,8 +10,10 @@ module.exports = {
   $let[users;0]
   $arrayForEach[guildIds;guildId;$letSum[users;$guildMemberCount[$env[guildId]]]]
 
-  $addField[Guild Count:;**$arrayLength[guildIds]**]
-  $addField[User Count:;**$get[users]**]
+  $addField[General Information;
+Guild Count: **$arrayLength[guildIds]**
+Total Members Count: **$get[users]** *(avg $floor[$math[$get[users]/$arrayLength[guildIds]]] users in each guild)*
+]
   
 
   `
