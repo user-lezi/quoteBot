@@ -16,9 +16,10 @@ const client = new ForgeClient({
 });
 const helpers = new CustomHelpers(client);
 
-helpers.loadCommands();
 helpers.loadGlobalVariables();
+helpers.loadHelpers();
 helpers.loadFunctions();
+helpers.loadCommands();
 
 client.commands.add({
   type: "ready",

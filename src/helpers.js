@@ -41,13 +41,15 @@ class CustomHelpers {
     }
     drawConsoleLine();
   }
-
   loadGlobalVariables() {
+    this.client.defaults = {};
     let variableLength = Object.keys(GlobalVariables).length;
     console.log("Loading Variables... [" + variableLength + "]");
     let code = "";
     for (let [id, valuesJson] of Object.entries(GlobalVariables)) {
+      this.client.defaults[id] = {};
       for(let [key, value] of Object.entries(valuesJson)) {
+        this.client.defaults[id][key] = value;
         code += `$setVar[${key};${id};${value}]\n`;
       }
     }
@@ -57,7 +59,6 @@ class CustomHelpers {
     });
     drawConsoleLine();
   }
-
   loadFunctions() {
     const functionsPath = join(__dirname, "functions");
     const functions = readdirSync(functionsPath);
@@ -69,6 +70,19 @@ class CustomHelpers {
     }
     //this.client.functions.load(join(__dirname, 'functions'))
       FunctionManager.load('CustomHelper', join(__dirname, 'functions'))
+    drawConsoleLine();
+  }
+
+  loadHelpers() {
+    let helpersFiles = readdir(join(__dirname, 'client-helpers'));
+    console.log("Loading Helpers... [" + helpersFiles.length + "]");
+    drawConsoleLine();
+    for (let file of helpersFiles) {
+      let helperName = file.split('/').pop().split('.')[0];
+      let helper = require('./' + join('client-helpers', helperName));
+      this.client[helperName] = new helper(this.client);
+      console.log(`> Loaded "${helperName}" [${file}]`);
+    }
     drawConsoleLine();
   }
 }

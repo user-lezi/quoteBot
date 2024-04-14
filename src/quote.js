@@ -3,12 +3,13 @@
 class Quote {
   constructor(user, content) {
     this.content = content;
+    this.author = user;
     let id = user.id;
     /* 0xFF FF FF FFF  */
     /*   a  b  c  d    */
     /* 
      a = Sum of digits of user id
-     b = length of content % 0xFF
+     b = random integer between 0 - 255
      c = last two digits of user id
      d = time in ms % 0xFFF
     */
@@ -17,7 +18,7 @@ class Quote {
       a = sumDigits(a);
     };
 
-    let b = content.length % (0xFF + 1);
+    let b = Math.floor(Math.random() * 0xFF);
     let c = id.toString().slice(-2);
     let d = Date.now() % (0xFFF + 1);
     this.id = a.toString(16).padStart(2, '0') + b.toString(16).padStart(2, '0') + c.toString(16).padStart(2, '0') + d.toString(16).padStart(3, '0');
