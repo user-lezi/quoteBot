@@ -1,4 +1,4 @@
-run = "node src/index.js"
+run = "prettier src --write && node src/index.js"
 entrypoint = "src/index.js"
 modules = ["nodejs-20:v8-20230920-bd784b9"]
 
@@ -7,3 +7,4 @@ channel = "stable-23_11"
 
 [[ports]]
 localPort = 3000
+externalPort = 80

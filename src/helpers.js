@@ -1,6 +1,6 @@
 const { readdirSync, statSync } = require("fs");
 const { join } = require("path");
-const { FunctionManager } = require('@tryforge/forgescript');
+const { FunctionManager } = require("@tryforge/forgescript");
 
 const GlobalVariables = require("./variables.json");
 
@@ -48,7 +48,7 @@ class CustomHelpers {
     let code = "";
     for (let [id, valuesJson] of Object.entries(GlobalVariables)) {
       this.client.defaults[id] = {};
-      for(let [key, value] of Object.entries(valuesJson)) {
+      for (let [key, value] of Object.entries(valuesJson)) {
         this.client.defaults[id][key] = value;
         code += `$setVar[${key};${id};${value}]\n`;
       }
@@ -65,21 +65,21 @@ class CustomHelpers {
     console.log("Loading Functions... [" + functions.length + "]");
     drawConsoleLine();
     for (const functionFile of functions) {
-      const func = require('./' + join('functions', functionFile)). default;
+      const func = require("./" + join("functions", functionFile)).default;
       console.log(`> Loaded "${func.name}" [${functionFile}]`);
     }
     //this.client.functions.load(join(__dirname, 'functions'))
-      FunctionManager.load('CustomHelper', join(__dirname, 'functions'))
+    FunctionManager.load("CustomHelper", join(__dirname, "functions"));
     drawConsoleLine();
   }
 
   loadHelpers() {
-    let helpersFiles = readdir(join(__dirname, 'client-helpers'));
+    let helpersFiles = readdir(join(__dirname, "client-helpers"));
     console.log("Loading Helpers... [" + helpersFiles.length + "]");
     drawConsoleLine();
     for (let file of helpersFiles) {
-      let helperName = file.split('/').pop().split('.')[0];
-      let helper = require('./' + join('client-helpers', helperName));
+      let helperName = file.split("/").pop().split(".")[0];
+      let helper = require("./" + join("client-helpers", helperName));
       this.client[helperName] = new helper(this.client);
       console.log(`> Loaded "${helperName}" [${file}]`);
     }

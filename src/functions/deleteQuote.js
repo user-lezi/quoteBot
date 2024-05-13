@@ -1,5 +1,4 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { ChannelType } = require("discord.js");
 module.exports.default = new NativeFunction({
   name: "$deleteQuote",
   version: "1.0.0",
@@ -24,8 +23,6 @@ module.exports.default = new NativeFunction({
   ],
   output: ArgType.Boolean,
   async execute(ctx, [user, quoteId]) {
-    return this.success(
-      await ctx.client.quote.deleteQuote(user, quoteId)
-    )
-  }
+    return this.success(await ctx.client.quote.deleteQuote(user, quoteId));
+  },
 });

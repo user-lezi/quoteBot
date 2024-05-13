@@ -1,5 +1,40 @@
-const { Quote } = require("../quote");
 const { User, ChannelType, EmbedBuilder } = require("discord.js");
+
+class Quote {
+  constructor(user, content) {
+    this.content = content;
+    this.author = user;
+    let id = user.id;
+    /* 0xFF FF FF FFF  */
+    /*   a  b  c  d    */
+    /* 
+     a = Sum of digits of user id
+     b = random integer between 0 - 255
+     c = last two digits of user id
+     d = time in ms % 0xFFF
+    */
+    let a = sumDigits(id);
+    if (a > 0xff) {
+      a = sumDigits(a);
+    }
+
+    let b = Math.floor(Math.random() * 0xff);
+    let c = id.toString().slice(-2);
+    let d = Date.now() % (0xfff + 1);
+    this.id =
+      a.toString(16).padStart(2, "0") +
+      b.toString(16).padStart(2, "0") +
+      c.toString(16).padStart(2, "0") +
+      d.toString(16).padStart(3, "0");
+  }
+}
+
+function sumDigits(n) {
+  return n
+    .toString()
+    .split("")
+    .reduce((a, b) => a + parseInt(b), 0);
+}
 
 class QuoteHelper {
   #client;
@@ -46,6 +81,39 @@ class QuoteHelper {
     }
     return quoteIds;
   }
+  async getQuote(quoteId) {
+    let quoteChannel = this.getQuoteChannel(quoteId);
+    if (!quoteChannel) return null;
+    let topic = quoteChannel.topic;
+    let parsedTopic = JSON.parse(topic);
+    let quoteMessage = await quoteChannel.messages.fetch(parsedTopic.content);
+    let quoteContent = quoteMessage.content;
+
+    let user = await this.client.users.fetch(parsedTopic.author);
+
+    return {
+      time: parsedTopic.time,
+      content: quoteContent,
+      author: user,
+      id: quoteId,
+      views: parsedTopic.views,
+      message: quoteMessage,
+      channel: quoteChannel,
+    };
+  }
+  async addView(quoteId) {
+    let quote = await this.getQuote(quoteId);
+    if (!quote) return null;
+    quote.views++;
+    let topic = {
+      content: quote.message.id,
+      author: quote.author.id,
+      time: quote.time,
+      views: quote.views,
+    };
+    await quote.channel.setTopic(JSON.stringify(topic));
+    return quote;
+  }
 
   async quoteCount(user) {
     if (!(user instanceof User)) return 0;
@@ -54,6 +122,19 @@ class QuoteHelper {
   }
   async allQuoteCount() {
     let allQuotes = this.quoteDB.channels.cache.size;
+    return allQuotes;
+  }
+  async allQuoteIds() {
+    return this.quoteDB.channels.cache.map((c) => c.name);
+  }
+  async allQuotes() {
+    let allQuotes = [];
+    let allQuoteIds = await this.allQuoteIds();
+    for (let id of allQuoteIds) {
+      let quote = await this.getQuote(id);
+      if (!quote) continue;
+      allQuotes.push(quote);
+    }
     return allQuotes;
   }
 
@@ -127,6 +208,7 @@ class QuoteHelper {
       time: Date.now(),
       author: quote.author.id,
       content: quoteMessage.id,
+      views: 0,
     };
     await quoteChannel.setTopic(JSON.stringify(quoteTopic));
     return quoteChannel;

@@ -1,6 +1,4 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { ChannelType, EmbedBuilder } = require("discord.js");
-const { Quote } = require("../quote");
 module.exports.default = new NativeFunction({
   name: "$createQuote",
   version: "1.0.0",
@@ -27,7 +25,7 @@ module.exports.default = new NativeFunction({
   async execute(ctx, [u, ...quoteContent]) {
     quoteContent = quoteContent.join(";");
     let quote = await ctx.client.quote.createQuote(u, quoteContent);
-    if (!quote) return this.success('');
+    if (!quote) return this.success("");
     return this.success(quote);
   },
 });

@@ -1,5 +1,4 @@
 const { NativeFunction, ArgType } = require("@tryforge/forgescript");
-const { ChannelType } = require("discord.js");
 module.exports.default = new NativeFunction({
   name: "$quoteCount",
   version: "1.0.0",

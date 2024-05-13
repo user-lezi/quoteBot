@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'stats',
+  name: "stats",
   code: `
   $title[Bot Statistics]
   $color[$getVar[main;colors]]
@@ -21,5 +21,5 @@ Uptime: **$parseMS[$uptime]**
 ]
   
 
-  `
-}
+  `,
+};
