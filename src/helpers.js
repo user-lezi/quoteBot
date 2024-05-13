@@ -41,6 +41,31 @@ class CustomHelpers {
     }
     drawConsoleLine();
   }
+  loadEvents() {
+    const eventsPath = join(__dirname, "events");
+    const events = readdir(eventsPath);
+    console.log("Loading events... [" + events.length + "]");
+    drawConsoleLine();
+    for (const event of events) {
+      const evt = require(event);
+      this.client.commands.add(evt);
+      console.log(`> Loaded "${evt.type}" [${event}]`);
+    }
+    drawConsoleLine();
+  }
+  loadFunctions() {
+    const functionsPath = join(__dirname, "functions");
+    const functions = readdirSync(functionsPath);
+    console.log("Loading Functions... [" + functions.length + "]");
+    drawConsoleLine();
+    for (const functionFile of functions) {
+      const func = require("./" + join("functions", functionFile)).default;
+      console.log(`> Loaded "${func.name}" [${functionFile}]`);
+    }
+    //this.client.functions.load(join(__dirname, 'functions'))
+    FunctionManager.load("CustomHelper", join(__dirname, "functions"));
+    drawConsoleLine();
+  }
   loadGlobalVariables() {
     this.client.defaults = {};
     let variableLength = Object.keys(GlobalVariables).length;
@@ -59,20 +84,6 @@ class CustomHelpers {
     });
     drawConsoleLine();
   }
-  loadFunctions() {
-    const functionsPath = join(__dirname, "functions");
-    const functions = readdirSync(functionsPath);
-    console.log("Loading Functions... [" + functions.length + "]");
-    drawConsoleLine();
-    for (const functionFile of functions) {
-      const func = require("./" + join("functions", functionFile)).default;
-      console.log(`> Loaded "${func.name}" [${functionFile}]`);
-    }
-    //this.client.functions.load(join(__dirname, 'functions'))
-    FunctionManager.load("CustomHelper", join(__dirname, "functions"));
-    drawConsoleLine();
-  }
-
   loadHelpers() {
     let helpersFiles = readdir(join(__dirname, "client-helpers"));
     console.log("Loading Helpers... [" + helpersFiles.length + "]");

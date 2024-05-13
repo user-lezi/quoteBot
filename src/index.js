@@ -14,19 +14,14 @@ const client = new ForgeClient({
   prefixes: ["qi"],
   extensions: [new ForgeCanvas(), new ForgeDB(join(__dirname, "./d.db"))],
 });
+console.clear();
 const helpers = new CustomHelpers(client);
 
 helpers.loadGlobalVariables();
 helpers.loadHelpers();
 helpers.loadFunctions();
+helpers.loadEvents();
 helpers.loadCommands();
-
-client.commands.add({
-  type: "ready",
-  code: `
-  $log[Ready on $userTag[$clientID]]
-  `,
-});
 
 client.login(process.env.TOKEN).catch(function () {});
 app.listen(3000, () => {
